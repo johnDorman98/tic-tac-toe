@@ -42,5 +42,31 @@ const player = (name, marker) => {
   return {name, marker, getScore, incrementScore};
 }
 
+// Factory function for the game logic
+const gameController = () => {
+  // Method to determine if game over state is met.
+  // DEFINE checkGameOver
+  
 
+  // SET board to gameBoard IIFE.
+  // CREATE player1 object.
+  // CREATE player2 object.
+  // SET initial currentPlayer to player1.
+  // SET initial isGameOver to false.
+  // SET round = 1.
 
+  // WHILE isGameOver is false
+    // LET currentPlayer select X and Y for marker to be placed.
+    // place currentPlayer marker in board.
+    // CALL checkGameOver to check for game over condition, returning winning marker, draw or false.
+    // IF checkGameOver is currentPlayer.marker
+      // UPDATE currentPlayer score using incrementScore
+      // SET isGameOver to true
+      // EXIT loop.
+    // ELSE if checkGameOve is draw
+      // SET isGameOver to False.
+    // ELSE
+      // UPDATE currentPlayer to the other player object using ternary.
+    // ENDIF
+  // ENDWHILE
+}
