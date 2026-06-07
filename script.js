@@ -24,4 +24,23 @@ const gameBoard = (() => {
 // TODO:
 // Should input validation be done in the game controller
 // Would it be necessary for gameBoard to return the rows and cols via a method to be used by game controller.
+// Would the game controller be responsible for managing the marker selection between two players or would it be random.
+
+// Factory function to handle the creation of Player objects.
+const player = (name, marker) => {
+  let score = 0;
+
+  // Methods for managing attributes.
+  getScore = () => {
+    return score;
+  }
+
+  incrementScore = () => {
+    score++;
+  }
+
+  return {name, marker, getScore, incrementScore};
+}
+
+
 
