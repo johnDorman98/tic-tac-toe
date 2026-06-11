@@ -45,28 +45,92 @@ const player = (name, marker) => {
 // Factory function for the game logic
 const gameController = () => {
   // Method to determine if game over state is met.
-  // DEFINE checkGameOver
-  
+  const checkGameOver = (marker, boardToCheck) => {
+    console.log(boardToCheck);
+    console.log(marker);
+    
+    
+    // Check for three in a row horizontally.
+    for (let row = 0; row < boardToCheck[0].length; row++) {
+      let markerInRow = 0;
+      console.log(`Row to check: ${row} = ${boardToCheck[row]}`);
+      for (let col = 0; col < boardToCheck[row].length; col++) {
+        console.log(`Column to check: ${col} = ${boardToCheck[row][col]}`);
+        const cell = boardToCheck[row][col];
+        if (cell === marker) {
+          console.log("marker found, incrementing count");
+          markerInRow++;
+        }
+      }
 
-  // SET board to gameBoard IIFE.
-  // CREATE player1 object.
-  // CREATE player2 object.
-  // SET initial currentPlayer to player1.
-  // SET initial isGameOver to false.
-  // SET round = 1.
+      if (markerInRow == 3) {
+        return marker
+      }
+    }
+    // TODO:
+    // Check for vertical three in row
+    // Check for diagonal three in row
+    // Check for draw
+  }
+  // DEFINE checkGameOver(marker, boardToCheck) to return marker, "draw", or "false"
+    // IF marker has three in a row (vertically, horizontally, diagonally)
+      // SET threeInRow to false.
+      // Check for three in row horizontally.
+        // Using nested loop board[row][col]
+        // SET threeInRow to true if found.
+      // Check for three in a row vertically.
+        // Using nested loop board[col][row]
+        // SET threeInRow to true if found.
+      // Check for three in a row horizontally
+        // Using an outer loop to control the rows and hard coding specific columns.
+        // SET threeInRow to true if found.
 
-  // WHILE isGameOver is false
-    // LET currentPlayer select X and Y for marker to be placed.
-    // place currentPlayer marker in board.
-    // CALL checkGameOver to check for game over condition, returning winning marker, draw or false.
-    // IF checkGameOver is currentPlayer.marker
-      // UPDATE currentPlayer score using incrementScore
-      // SET isGameOver to true
-      // EXIT loop.
-    // ELSE if checkGameOve is draw
-      // SET isGameOver to False.
+      // IF threeInRow is true
+        // return marker
+    // ELSE IF there are no empty cells
+      // return "draw"
     // ELSE
-      // UPDATE currentPlayer to the other player object using ternary.
+      // return "false"
     // ENDIF
-  // ENDWHILE
+  
+  const board = gameBoard;
+
+  const player1 = player("Player1", "X");
+  const player2 = player("Player2", "O");
+  let currentPlayer = player1;
+
+  let isGameOver = false;
+  // SET round = 1.
+  console.log(currentPlayer);
+  
+  // Allow each user to take place a marker until the game is complete.
+  while (!isGameOver) {
+    // Retrieve desired marker position.
+    console.table(board.getBoard());
+    if (prompt(`${currentPlayer.name}: Add marker`) === "yes") {
+      const markerRow = prompt("Please enter desired row for marker:");
+      const markerColumn = prompt("Please enter desired column for marker:");
+
+      board.addMarker(markerRow, markerColumn, currentPlayer.marker)
+      const gameOverResult = checkGameOver(currentPlayer.marker, board.getBoard())
+      if (gameOverResult === currentPlayer.marker) {
+        console.log("Player Marker Found");
+        currentPlayer.incrementScore;
+        isGameOver = true;
+      } else if (gameOverResult === "draw") {
+        console.log("Draw");
+        
+        isGameOver = true;
+      } else {
+        currentPlayer = (currentPlayer === player1) ? player2 : player1;
+        console.log(currentPlayer);
+      }
+    } else {
+      isGameOver = true
+    }
+    
+
+  }
 }
+
+gameController();
