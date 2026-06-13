@@ -4,7 +4,7 @@ const gameBoard = (() => {
   const cols = 3;
 
   // Represent game board as a row * col with empty cells to be populated by markers(X/O).
-  const board = Array.from({ length: rows }, () =>
+  let board = Array.from({ length: rows }, () =>
     Array.from({ length: cols }, () => ""),
   );
 
@@ -23,6 +23,12 @@ const gameBoard = (() => {
   // Handle retrieving the board.
   getBoard = () => {
     return board;
+  };
+
+  resetBoard = () => {
+    board = Array.from({ length: rows }, () =>
+      Array.from({ length: cols }, () => ""),
+    );
   };
 
   return { addMarker, getBoard };
@@ -46,6 +52,44 @@ const player = (name, marker) => {
 
 // Factory function for the game logic
 const gameController = () => {
+  const checkThreeInRow = (marker, boardToCheck) => {
+    // Check for three in a row horizontally.
+    for (let row = 0; row < boardToCheck.length; row++) {
+      let markerInRow = 0;
+      for (let col = 0; col < boardToCheck[row].length; col++) {
+        const cell = boardToCheck[row][col];
+        if (cell === marker) {
+          markerInRow++;
+        }
+      }
+
+      if (markerInRow == 3) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  const checkThreeInColumn = (marker, boardToCheck) => {
+    // Check for three in a row vertically.
+    for (let col = 0; col < boardToCheck[0].length; col++) {
+      let markerInCol = 0;
+      for (let row = 0; row < boardToCheck.length; row++) {
+        const cell = boardToCheck[row][col];
+        if (cell === marker) {
+          markerInCol++;
+        }
+      }
+
+      if (markerInCol === 3) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
   // Check for diagonal three in a row, returning the true if found.
   const checkDiagonalWin = (marker, boardToCheck) => {
     let diagonalWin = true;
@@ -100,41 +144,13 @@ const gameController = () => {
 
   // Determine if game over state is met.
   const checkGameOver = (marker, boardToCheck) => {
-    // Check for three in a row horizontally.
-    for (let row = 0; row < boardToCheck.length; row++) {
-      let markerInRow = 0;
-      for (let col = 0; col < boardToCheck[row].length; col++) {
-        const cell = boardToCheck[row][col];
-        if (cell === marker) {
-          markerInRow++;
-        }
-      }
-
-      if (markerInRow == 3) {
-        return marker;
-      }
-    }
-
-    // Check for three in a row vertically.
-    for (let col = 0; col < boardToCheck[0].length; col++) {
-      let markerInCol = 0;
-      for (let row = 0; row < boardToCheck.length; row++) {
-        const cell = boardToCheck[row][col];
-        if (cell === marker) {
-          markerInCol++;
-        }
-      }
-
-      if (markerInCol === 3) {
-        return marker;
-      }
-    }
-
-    if (checkDiagonalWin(marker, boardToCheck)) {
+    if (checkThreeInRow(marker, boardToCheck)) {
       return marker;
-    }
-
-    if (checkDraw()) {
+    } else if (checkThreeInColumn(marker, boardToCheck)) {
+      return marker;
+    } else if (checkDiagonalWin(marker, boardToCheck)) {
+      return marker;
+    } else if (checkDraw()) {
       return "draw";
     }
   };
@@ -175,7 +191,9 @@ const gameController = () => {
           console.log(currentPlayer);
         }
       } else {
-        alert("Marker not placed, ensure a valid marker position is selected and that the cell is empty.")
+        alert(
+          "Marker not placed, ensure a valid marker position is selected and that the cell is empty.",
+        );
       }
     } else {
       isGameOver = true;
@@ -186,7 +204,6 @@ const gameController = () => {
 gameController();
 
 // TODO:
-// Ensure selected cells are empty before placing marker.
 // Should input validation be done in the game controller
 // Would it be necessary for gameBoard to return the rows and cols via a method to be used by game controller.
 // Would the game controller be responsible for managing the marker selection between two players or would it be random.
