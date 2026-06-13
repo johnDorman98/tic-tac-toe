@@ -25,13 +25,17 @@ const gameBoard = (() => {
     return board;
   };
 
+  getBoardSize = () => {
+    return { rows, cols };
+  };
+
   resetBoard = () => {
     board = Array.from({ length: rows }, () =>
       Array.from({ length: cols }, () => ""),
     );
   };
 
-  return { addMarker, getBoard };
+  return { addMarker, getBoard, getBoardSize, resetBoard };
 })();
 
 // Factory function to handle the creation of Player objects.
@@ -150,12 +154,15 @@ const gameController = () => {
       return marker;
     } else if (checkDiagonalWin(marker, boardToCheck)) {
       return marker;
-    } else if (checkDraw()) {
+    } else if (checkDraw(boardToCheck)) {
       return "draw";
     }
   };
 
   const board = gameBoard;
+  const {rows, cols} = board.getBoardSize();
+  const display = displayController;
+  display.createBoard(rows, cols);
 
   const player1 = player("Player1", "X");
   const player2 = player("Player2", "O");
@@ -167,12 +174,12 @@ const gameController = () => {
   // Allow each user to take place a marker until the game is complete.
   while (!isGameOver) {
     // Retrieve desired marker position.
-    console.table(board.getBoard());
     if (prompt(`${currentPlayer.name}: Add marker`) === "yes") {
       const markerRow = prompt("Please enter desired row for marker:");
       const markerColumn = prompt("Please enter desired column for marker:");
 
       if (board.addMarker(markerRow, markerColumn, currentPlayer.marker)) {
+        display.updateBoard(markerRow, markerColumn, currentPlayer.marker);
         const gameOverResult = checkGameOver(
           currentPlayer.marker,
           board.getBoard(),
@@ -200,6 +207,30 @@ const gameController = () => {
     }
   }
 };
+
+const displayController = (() => {
+  const createBoard = (numOfRows, numOfCols) => {
+    const boardContainer = document.querySelector("#game-container");
+
+    for (let row = 0; row < numOfRows; row++) {
+      for (let col = 0; col < numOfCols; col++) {
+        const cell = document.createElement("div");
+        cell.classList.add("game-cell");
+        cell.dataset.row = row;
+        cell.dataset.col = col;
+        cell.textContent = "P";
+        boardContainer.appendChild(cell)
+      }
+    }
+  };
+
+  const updateBoard = (row, col, marker) => {
+    const selectedCell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`)
+    selectedCell.textContent = marker    
+  }
+
+  return { createBoard, updateBoard };
+})();
 
 gameController();
 
