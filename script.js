@@ -160,52 +160,42 @@ const gameController = () => {
   };
 
   const board = gameBoard;
-  const {rows, cols} = board.getBoardSize();
+  const { rows, cols } = board.getBoardSize();
   const display = displayController;
+  const boardContainerElement = display.getBoardContainer();
   display.createBoard(rows, cols);
 
   const player1 = player("Player1", "X");
   const player2 = player("Player2", "O");
   let currentPlayer = player1;
 
-  let isGameOver = false;
-  // SET round = 1.
+  boardContainerElement.addEventListener("click", (event) => {
+    const selectedCell = event.target;
+    const selectedRow = selectedCell.dataset.row;
+    const selectedColumn = selectedCell.dataset.col;
 
-  // Allow each user to take place a marker until the game is complete.
-  while (!isGameOver) {
-    // Retrieve desired marker position.
-    if (prompt(`${currentPlayer.name}: Add marker`) === "yes") {
-      const markerRow = prompt("Please enter desired row for marker:");
-      const markerColumn = prompt("Please enter desired column for marker:");
-
-      if (board.addMarker(markerRow, markerColumn, currentPlayer.marker)) {
-        display.updateBoard(markerRow, markerColumn, currentPlayer.marker);
-        const gameOverResult = checkGameOver(
-          currentPlayer.marker,
-          board.getBoard(),
-        );
-        console.log(`Round result: ${gameOverResult}`);
-
-        if (gameOverResult === currentPlayer.marker) {
-          console.log("Player Marker Found");
-          currentPlayer.incrementScore();
-          isGameOver = true;
-        } else if (gameOverResult === "draw") {
-          console.log("Draw");
-          isGameOver = true;
-        } else {
-          currentPlayer = currentPlayer === player1 ? player2 : player1;
-          console.log(currentPlayer);
-        }
+    if (board.addMarker(selectedRow, selectedColumn, currentPlayer.marker)) {
+      display.updateBoard(selectedRow, selectedColumn, currentPlayer.marker);
+      const gameOverResult = checkGameOver(
+        currentPlayer.marker,
+        board.getBoard(),
+      );
+      
+      if (gameOverResult === currentPlayer.marker) {
+        alert(`Game over! ${currentPlayer.name} Wins!`)
+      } else if (gameOverResult === "draw") {
+        alert("Draw");
+        
       } else {
-        alert(
-          "Marker not placed, ensure a valid marker position is selected and that the cell is empty.",
-        );
+        currentPlayer = currentPlayer === player1 ? player2 : player1;
+        console.log(currentPlayer);
       }
     } else {
-      isGameOver = true;
+      alert(
+        "Marker not placed, ensure a valid marker position is selected and that the cell is empty.",
+      );
     }
-  }
+  });
 };
 
 const displayController = (() => {
@@ -213,23 +203,33 @@ const displayController = (() => {
     const boardContainer = document.querySelector("#game-container");
 
     for (let row = 0; row < numOfRows; row++) {
+      const rowElement = document.createElement("div")
+      rowElement.classList.add("game-row")
       for (let col = 0; col < numOfCols; col++) {
         const cell = document.createElement("div");
         cell.classList.add("game-cell");
         cell.dataset.row = row;
         cell.dataset.col = col;
         cell.textContent = "P";
-        boardContainer.appendChild(cell)
+        rowElement.appendChild(cell);
       }
+      boardContainer.appendChild(rowElement)
     }
   };
 
   const updateBoard = (row, col, marker) => {
-    const selectedCell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`)
-    selectedCell.textContent = marker    
-  }
+    const selectedCell = document.querySelector(
+      `[data-row="${row}"][data-col="${col}"]`,
+    );
+    selectedCell.textContent = marker;
+  };
 
-  return { createBoard, updateBoard };
+  const getBoardContainer = () => {
+    const boardContainer = document.querySelector("#game-container");
+    return boardContainer;
+  };
+
+  return { createBoard, updateBoard, getBoardContainer };
 })();
 
 gameController();
