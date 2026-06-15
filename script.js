@@ -30,9 +30,11 @@ const gameBoard = (() => {
   };
 
   resetBoard = () => {
-    board = Array.from({ length: rows }, () =>
-      Array.from({ length: cols }, () => ""),
-    );
+    for (let row = 0; row < board.length; row++) {
+      for (let col = 0; col < board[row].length; col++) {
+        board[row][col] = ""
+      }
+    }
   };
 
   return { addMarker, getBoard, getBoardSize, resetBoard };
@@ -169,32 +171,47 @@ const gameController = () => {
   const player2 = player("Player2", "O");
   let currentPlayer = player1;
 
-  boardContainerElement.addEventListener("click", (event) => {
-    const selectedCell = event.target;
-    const selectedRow = selectedCell.dataset.row;
-    const selectedColumn = selectedCell.dataset.col;
+  let isGameOver = false;
 
-    if (board.addMarker(selectedRow, selectedColumn, currentPlayer.marker)) {
-      display.updateBoard(selectedRow, selectedColumn, currentPlayer.marker);
-      const gameOverResult = checkGameOver(
-        currentPlayer.marker,
-        board.getBoard(),
-      );
-      
-      if (gameOverResult === currentPlayer.marker) {
-        alert(`Game over! ${currentPlayer.name} Wins!`)
-      } else if (gameOverResult === "draw") {
-        alert("Draw");
-        
+  boardContainerElement.addEventListener("click", (event) => {
+    if (isGameOver) {
+      return;
+    }      
+      const selectedCell = event.target;
+      const selectedRow = selectedCell.dataset.row;
+      const selectedColumn = selectedCell.dataset.col;
+
+      if (board.addMarker(selectedRow, selectedColumn, currentPlayer.marker)) {
+        display.updateBoard(selectedRow, selectedColumn, currentPlayer.marker);
+        const gameOverResult = checkGameOver(
+          currentPlayer.marker,
+          board.getBoard(),
+        );
+
+        if (gameOverResult === currentPlayer.marker) {
+          alert(`Game over! ${currentPlayer.name} Wins!`);
+          isGameOver = true
+        } else if (gameOverResult === "draw") {
+          alert("Draw");
+          isGameOver = true
+        } else {
+          currentPlayer = currentPlayer === player1 ? player2 : player1;
+          console.log(currentPlayer);
+        }
       } else {
-        currentPlayer = currentPlayer === player1 ? player2 : player1;
-        console.log(currentPlayer);
+        alert(
+          "Marker not placed, ensure a valid marker position is selected and that the cell is empty.",
+        );
       }
-    } else {
-      alert(
-        "Marker not placed, ensure a valid marker position is selected and that the cell is empty.",
-      );
-    }
+    });
+
+  const resetButtonElement = document.querySelector('button[type="reset"]');
+
+  resetButtonElement.addEventListener("click", () => {
+    board.resetBoard()
+    display.resetDisplay()
+    currentPlayer = player1;
+    isGameOver = false;
   });
 };
 
@@ -203,17 +220,17 @@ const displayController = (() => {
     const boardContainer = document.querySelector("#game-container");
 
     for (let row = 0; row < numOfRows; row++) {
-      const rowElement = document.createElement("div")
-      rowElement.classList.add("game-row")
+      const rowElement = document.createElement("div");
+      rowElement.classList.add("game-row");
       for (let col = 0; col < numOfCols; col++) {
         const cell = document.createElement("div");
         cell.classList.add("game-cell");
         cell.dataset.row = row;
         cell.dataset.col = col;
-        cell.textContent = "P";
+        cell.textContent = "E";
         rowElement.appendChild(cell);
       }
-      boardContainer.appendChild(rowElement)
+      boardContainer.appendChild(rowElement);
     }
   };
 
@@ -229,12 +246,19 @@ const displayController = (() => {
     return boardContainer;
   };
 
-  return { createBoard, updateBoard, getBoardContainer };
+  const resetDisplay = () => {
+    const boardCells = document.querySelectorAll(".game-cell");
+    boardCells.forEach((node, index) => {
+      node.textContent = "E"
+    });
+    
+  }
+
+  return { createBoard, updateBoard, getBoardContainer, resetDisplay };
 })();
 
 gameController();
 
 // TODO:
 // Should input validation be done in the game controller
-// Would it be necessary for gameBoard to return the rows and cols via a method to be used by game controller.
 // Would the game controller be responsible for managing the marker selection between two players or would it be random.
