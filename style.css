@@ -2,3 +2,14 @@ body {
   /* Offwhite background */
   background-color: #f2f2f2;  
 }
+
+.game-container {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+.game-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  text-align: center;
+}

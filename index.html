@@ -1,16 +1,19 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tic Tac Toe</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <h1>Tic Tac Toe</h1>
-    <p>Game feedback placeholder.</p>
+    <dialog id="game-outcome-modal">
+      <p id="game-outcome"></p>
+      <button id="game-outcome-close" autofocus>Close</button>
+    </dialog>
     <div id="game-container" class="game-container"></div>
     <button type="reset">Reset</button>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>

@@ -32,7 +32,7 @@ const gameBoard = (() => {
   resetBoard = () => {
     for (let row = 0; row < board.length; row++) {
       for (let col = 0; col < board[row].length; col++) {
-        board[row][col] = ""
+        board[row][col] = "";
       }
     }
   };
@@ -100,12 +100,8 @@ const gameController = () => {
   const checkDiagonalWin = (marker, boardToCheck) => {
     let diagonalWin = true;
 
-    console.log("Diagonal check started");
-
     // Top-left to bottom-right diagonal check for three in a row.
     for (let i = 0; i < boardToCheck.length; i++) {
-      console.log("Main Diagonal");
-
       if (boardToCheck[i][i] !== marker) {
         diagonalWin = false;
         break;
@@ -121,8 +117,6 @@ const gameController = () => {
 
       // Top-right to bottom-left diagonal check for three in a row.
       for (let i = 0; i < boardToCheck.length; i++) {
-        console.log("Anti Diagonal");
-
         // Control column to check for top-right to bottom-left.
         let colToCheck = 2 - i;
 
@@ -139,7 +133,7 @@ const gameController = () => {
   const checkDraw = (boardToCheck) => {
     for (let row = 0; row < boardToCheck.length; row++) {
       for (let col = 0; col < boardToCheck[row].length; col++) {
-        if (boardToCheck[row][col] !== "") {
+        if (boardToCheck[row][col] === "") {
           return false;
         }
       }
@@ -148,7 +142,6 @@ const gameController = () => {
     return true;
   };
 
-  // Determine if game over state is met.
   const checkGameOver = (marker, boardToCheck) => {
     if (checkThreeInRow(marker, boardToCheck)) {
       return marker;
@@ -173,45 +166,60 @@ const gameController = () => {
 
   let isGameOver = false;
 
+  const resetButtonElement = document.querySelector('button[type="reset"]');
+  const outcomeModal = document.querySelector("#game-outcome-modal");
+  const outcomeFeedback = document.querySelector("#game-outcome");
+  const outcomeModalClose = document.querySelector("#game-outcome-close");
+
   boardContainerElement.addEventListener("click", (event) => {
     if (isGameOver) {
       return;
-    }      
-      const selectedCell = event.target;
-      const selectedRow = selectedCell.dataset.row;
-      const selectedColumn = selectedCell.dataset.col;
+    }
+    const selectedCell = event.target;
+    const selectedRow = selectedCell.dataset.row;
+    const selectedColumn = selectedCell.dataset.col;
 
-      if (board.addMarker(selectedRow, selectedColumn, currentPlayer.marker)) {
-        display.updateBoard(selectedRow, selectedColumn, currentPlayer.marker);
-        const gameOverResult = checkGameOver(
-          currentPlayer.marker,
-          board.getBoard(),
-        );
+    if (board.addMarker(selectedRow, selectedColumn, currentPlayer.marker)) {
+      display.updateBoard(selectedRow, selectedColumn, currentPlayer.marker);
+      const gameOverResult = checkGameOver(
+        currentPlayer.marker,
+        board.getBoard(),
+      );
 
-        if (gameOverResult === currentPlayer.marker) {
-          alert(`Game over! ${currentPlayer.name} Wins!`);
-          isGameOver = true
-        } else if (gameOverResult === "draw") {
-          alert("Draw");
-          isGameOver = true
-        } else {
-          currentPlayer = currentPlayer === player1 ? player2 : player1;
-          console.log(currentPlayer);
-        }
+      if (gameOverResult === currentPlayer.marker) {
+        const gameOverMessage = `Game over! ${currentPlayer.name} Wins!`;
+        outcomeFeedback.textContent = gameOverMessage;
+        setTimeout(() => {
+          outcomeModal.showModal();
+        }, 1000);
+        isGameOver = true;
+      } else if (gameOverResult === "draw") {
+        const gameOverMessage = "Game over! Draw!";
+        outcomeFeedback.textContent = gameOverMessage;
+        setTimeout(() => {
+          outcomeModal.showModal();
+        }, 1000);
+        isGameOver = true;
       } else {
-        alert(
-          "Marker not placed, ensure a valid marker position is selected and that the cell is empty.",
-        );
+        currentPlayer = currentPlayer === player1 ? player2 : player1;
       }
-    });
+    } else {
+      alert(
+        "Marker not placed, ensure a valid marker position is selected and that the cell is empty.",
+      );
+    }
+  });
 
-  const resetButtonElement = document.querySelector('button[type="reset"]');
+  outcomeModalClose.addEventListener("click", () => {
+    outcomeModal.close();
+  });
 
   resetButtonElement.addEventListener("click", () => {
-    board.resetBoard()
-    display.resetDisplay()
+    board.resetBoard();
+    display.resetDisplay();
     currentPlayer = player1;
     isGameOver = false;
+    outcomeFeedback.textContent = "";
   });
 };
 
@@ -249,10 +257,9 @@ const displayController = (() => {
   const resetDisplay = () => {
     const boardCells = document.querySelectorAll(".game-cell");
     boardCells.forEach((node, index) => {
-      node.textContent = "E"
+      node.textContent = "E";
     });
-    
-  }
+  };
 
   return { createBoard, updateBoard, getBoardContainer, resetDisplay };
 })();
