@@ -6,14 +6,37 @@
     <title>Tic Tac Toe</title>
     <link rel="stylesheet" href="style.css" />
   </head>
+
   <body>
-    <h1>Tic Tac Toe</h1>
-    <dialog id="game-outcome-modal">
-      <p id="game-outcome"></p>
-      <button id="game-outcome-close" autofocus>Close</button>
-    </dialog>
-    <div id="game-container" class="game-container"></div>
-    <button type="reset">Reset</button>
+    <header>
+      <h1>Tic Tac Toe</h1>
+      <button>Switch Theme</button>
+    </header>
+    <main>
+      <dialog id="game-outcome-modal">
+        <p id="game-outcome"></p>
+        <button id="game-outcome-close" autofocus>Close</button>
+      </dialog>
+      <div class="score-board">
+        <div class="player-card">
+          <p class="player-name">Player 1</p>
+          <p class="player-score">0</p>
+        </div>
+        <div class="player-card">
+          <p class="player-name">Player 2</p>
+          <p class="player-score">0</p>
+        </div>
+      </div>
+      <div class="turn-indicator">Player name's Turn</div>
+      <div id="game-container" class="game-container"></div>
+      <button type="reset" class="restart-button">Restart</button>
+    </main>
+    <footer>
+      <p>Copyright text</p>
+    </footer>
     <script src="script.js"></script>
   </body>
 </html>
+
+<!-- TODO: -->
+<!-- Implement name change feature. -->

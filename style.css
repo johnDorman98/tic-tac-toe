@@ -5,11 +5,11 @@ body {
 
 .game-container {
   display: grid;
-  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr);
 }
 
-.game-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  text-align: center;
+.game-cell {
+  height: 100px;
+  width: 100px;
 }

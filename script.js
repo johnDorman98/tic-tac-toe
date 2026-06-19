@@ -191,14 +191,14 @@ const gameController = () => {
         outcomeFeedback.textContent = gameOverMessage;
         setTimeout(() => {
           outcomeModal.showModal();
-        }, 1000);
+        }, 100);
         isGameOver = true;
       } else if (gameOverResult === "draw") {
         const gameOverMessage = "Game over! Draw!";
         outcomeFeedback.textContent = gameOverMessage;
         setTimeout(() => {
           outcomeModal.showModal();
-        }, 1000);
+        }, 100);
         isGameOver = true;
       } else {
         currentPlayer = currentPlayer === player1 ? player2 : player1;
@@ -228,17 +228,14 @@ const displayController = (() => {
     const boardContainer = document.querySelector("#game-container");
 
     for (let row = 0; row < numOfRows; row++) {
-      const rowElement = document.createElement("div");
-      rowElement.classList.add("game-row");
       for (let col = 0; col < numOfCols; col++) {
-        const cell = document.createElement("div");
+        const cell = document.createElement("button");
         cell.classList.add("game-cell");
         cell.dataset.row = row;
         cell.dataset.col = col;
-        cell.textContent = "E";
-        rowElement.appendChild(cell);
+        cell.textContent = "";
+        boardContainer.appendChild(cell);
       }
-      boardContainer.appendChild(rowElement);
     }
   };
 
@@ -257,7 +254,7 @@ const displayController = (() => {
   const resetDisplay = () => {
     const boardCells = document.querySelectorAll(".game-cell");
     boardCells.forEach((node, index) => {
-      node.textContent = "E";
+      node.textContent = "";
     });
   };
 
