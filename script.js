@@ -1,18 +1,27 @@
-// IIFE to handle the creation of a Tic Tac Toe board.
+/**
+ * Maintains the state of the 3x3 grid, providing methods to safely modify it.
+ * @namespace gameBoard
+ */
 const gameBoard = (() => {
   const rows = 3;
   const cols = 3;
 
-  // Represent game board as a row * col with empty cells to be populated by markers(X/O).
   let board = Array.from({ length: rows }, () =>
     Array.from({ length: cols }, () => ""),
   );
 
-  // Update board with marker at specified row and col.
+  /**
+   * Handles adding the provided marker to the select cell at board[row][col].
+   * @param {number} row - Represents the select row to place the marker.
+   * @param {number} col - Represents the select column to place the marker.
+   * @param {string} marker - Represents the marker to be placed within the board. 
+   * @memberof gameBoard
+   * @returns {boolean} Returns true if the marker was placed successfully, false otherwise.
+   */
   addMarker = (row, col, marker) => {
     if (row < rows && row >= 0 && col < cols && col >= 0) {
       if (board[row][col] === "") {
-        board[row].splice(col, 1, marker);
+        board[row][col] = marker;
         return true;
       }
 
@@ -20,15 +29,29 @@ const gameBoard = (() => {
     }
   };
 
-  // Handle retrieving the board.
+  /**
+   * Responsible for safely retrieving the board.
+   * @memberof gameBoard
+   * @returns {string[][]} Returns the game board to help protect the board. 
+   */
   getBoard = () => {
     return board;
   };
 
+  /**
+   * Handles retrieving the size of the board, to protect the number of rows and columns used.
+   * @memberof gameBoard
+   * @returns {{rows: number, cols: number}} Returns an object containing the number of rows and columns
+   *  used to create the board.
+   */
   getBoardSize = () => {
     return { rows, cols };
   };
 
+  /**
+   * Responsible for resetting the game board back to its initial state.
+   * @memberof gameBoard
+   */
   resetBoard = () => {
     for (let row = 0; row < board.length; row++) {
       for (let col = 0; col < board[row].length; col++) {
@@ -204,9 +227,9 @@ const gameController = () => {
         currentPlayer = currentPlayer === player1 ? player2 : player1;
       }
     } else {
-      alert(
-        "Marker not placed, ensure a valid marker position is selected and that the cell is empty.",
-      );
+      const gameOverMessage = `${currentPlayer.marker} not placed, please select an empty cell.`;
+      outcomeFeedback.textContent = gameOverMessage;
+      outcomeModal.showModal();
     }
   });
 
