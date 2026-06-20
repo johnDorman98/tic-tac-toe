@@ -63,15 +63,28 @@ const gameBoard = (() => {
   return { addMarker, getBoard, getBoardSize, resetBoard };
 })();
 
-// Factory function to handle the creation of Player objects.
+/**
+ * Handles the creation of player objects, protecting the players score.
+ * @param {string} name - Name to represent the player.
+ * @param {string} marker - The players select marker.
+ * @returns {{ name: string, marker: string, getScore: function(): number, incrementScore: function(): void }} 
+ *  Returns an object to represent a player and functions to adjust the players score.
+ */
 const player = (name, marker) => {
   let score = 0;
 
-  // Methods for managing attributes.
+  /**
+   * Retrieves the players score to protect it.
+   * @memberof player
+   * @returns {number} Returns the players score.
+   */
   getScore = () => {
     return score;
   };
 
+  /**
+   * Increments the players current score by one.
+   */
   incrementScore = () => {
     score++;
   };
