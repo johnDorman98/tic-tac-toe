@@ -74,13 +74,32 @@ const gameBoard = (() => {
 
 /**
  * Handles the creation of player objects, protecting the players score.
- * @param {string} name - Name to represent the player.
+ * @param {string} initialName - Name to represent the player.
  * @param {string} marker - The players select marker.
  * @returns {{ name: string, marker: string, getScore: function(): number, incrementScore: function(): void }}
  *  Returns an object to represent a player and functions to adjust the players score.
  */
-const player = (name, marker) => {
+const player = (initialName, marker) => {
+  let name = initialName
   let score = 0;
+  
+  /**
+   * Retrieves the players name to protect it.
+   * @memberof player
+   * @returns {string} Returns the players name.
+   */
+  getName = () => {
+    return name;
+  };
+
+  /**
+   * Sets the players name to protect it.
+   * @param {string} updatedName - New value for players name.
+   * @memberof player
+   */
+  setName = (updatedName) => {
+    name = updatedName;
+  };
 
   /**
    * Retrieves the players score to protect it.
@@ -98,7 +117,7 @@ const player = (name, marker) => {
     score++;
   };
 
-  return { name, marker, getScore, incrementScore };
+  return { marker, getName, setName, getScore, incrementScore };
 };
 
 /**
@@ -235,8 +254,10 @@ const gameController = () => {
   display.createBoard(rows, cols);
 
   // Setup player objects and starting current player.
-  const player1 = player("Player1", "X");
-  const player2 = player("Player2", "O");
+  const firstPlayerNameElement = document.querySelector("#first-player-name");
+  const secondPlayerNameElement = document.querySelector("#second-player-name");
+  const player1 = player(firstPlayerNameElement, "X");
+  const player2 = player(secondPlayerNameElement, "O");
   let currentPlayer = player1;
 
   let isGameOver = false;
@@ -246,6 +267,9 @@ const gameController = () => {
   const outcomeModal = document.querySelector("#game-outcome-modal");
   const outcomeFeedback = document.querySelector("#game-outcome");
   const outcomeModalClose = document.querySelector("#game-outcome-close");
+
+  // Update to add event listener for name update button
+  // Listen for submit to player-config-modal to update currentPlayer name using the setName method.
 
   /**
    * Listens for click even on the board to attempt to place the current players marker.
