@@ -267,9 +267,32 @@ const gameController = () => {
   const outcomeModal = document.querySelector("#game-outcome-modal");
   const outcomeFeedback = document.querySelector("#game-outcome");
   const outcomeModalClose = document.querySelector("#game-outcome-close");
+  const playerConfigModal = document.querySelector("#player-config-modal");
+  const playerConfigForm = document.querySelector("#player-config-form");
+  const updateNameButton = document.querySelector("#update-name-button");
 
-  // Update to add event listener for name update button
-  // Listen for submit to player-config-modal to update currentPlayer name using the setName method.
+  playerConfigForm.addEventListener("submit", (event) => {
+    event.preventDefault()
+    const newPlayerName = event.target.elements["new-player-name"].value.trim()
+    
+    if (newPlayerName) {
+      console.log(`New Player Name: ${newPlayerName}`);
+      
+      setTimeout(() => {
+        playerConfigModal.close();
+        event.target.reset();
+      }, 100);
+    }
+
+
+  })
+
+  /**
+   * Handles opening the modal for updating the users name.
+   */
+  updateNameButton.addEventListener("click", () => {
+    playerConfigModal.showModal()
+  })
 
   /**
    * Listens for click even on the board to attempt to place the current players marker.
