@@ -80,9 +80,9 @@ const gameBoard = (() => {
  *  Returns an object to represent a player and functions to adjust the players score.
  */
 const player = (initialName, marker) => {
-  let name = initialName
+  let name = initialName;
   let score = 0;
-  
+
   /**
    * Retrieves the players name to protect it.
    * @memberof player
@@ -258,6 +258,7 @@ const gameController = () => {
   const secondPlayerNameElement = document.querySelector("#second-player-name");
   const player1 = player(firstPlayerNameElement, "X");
   const player2 = player(secondPlayerNameElement, "O");
+
   let currentPlayer = player1;
 
   let isGameOver = false;
@@ -271,28 +272,41 @@ const gameController = () => {
   const playerConfigForm = document.querySelector("#player-config-form");
   const updateNameButton = document.querySelector("#update-name-button");
 
+  /**
+   * Handle updating the current players name and closing the modal when the new name is entered.
+   */
   playerConfigForm.addEventListener("submit", (event) => {
-    event.preventDefault()
-    const newPlayerName = event.target.elements["new-player-name"].value.trim()
-    
+    event.preventDefault();
+    const newPlayerName = event.target.elements["new-player-name"].value.trim();
+
     if (newPlayerName) {
-      console.log(`New Player Name: ${newPlayerName}`);
-      
+      let playerNameElementId = "";
+      currentPlayer.setName(newPlayerName);
+
+      // Determine element ID to be updated.
+      if (currentPlayer === player1) {
+        playerNameElementId = "first-player-name";
+      } else if (currentPlayer === player2) {
+        playerNameElementId = "second-player-name";
+      }
+
+      display.updatePlayerCardName(
+        playerNameElementId,
+        currentPlayer.getName(),
+      );
       setTimeout(() => {
         playerConfigModal.close();
         event.target.reset();
       }, 100);
     }
-
-
-  })
+  });
 
   /**
    * Handles opening the modal for updating the users name.
    */
   updateNameButton.addEventListener("click", () => {
-    playerConfigModal.showModal()
-  })
+    playerConfigModal.showModal();
+  });
 
   /**
    * Listens for click even on the board to attempt to place the current players marker.
@@ -307,6 +321,7 @@ const gameController = () => {
     const selectedRow = selectedCell.dataset.row;
     const selectedColumn = selectedCell.dataset.col;
 
+    // Only check game outcome if marker has been placed.
     if (board.addMarker(selectedRow, selectedColumn, currentPlayer.marker)) {
       display.updateBoard(selectedRow, selectedColumn, currentPlayer.marker);
       const gameOverResult = checkGameOver(
@@ -363,6 +378,16 @@ const gameController = () => {
  */
 const displayController = (() => {
   /**
+   * Handles updating the UI for the player name.
+   * @param {string} playerCardNameId - Represents the ID for the current player name element.
+   * @param {string} newName - The current players new name.
+   */
+  const updatePlayerCardName = (playerCardNameId, newName) => {
+    const selectedPlayerName = document.querySelector(`#${playerCardNameId}`);
+    selectedPlayerName.textContent = newName;
+  };
+
+  /**
    * Responsible for populate the game container with cells to create the UI.
    * @param {number} numOfRows - Represents the number of rows for the board to be created.
    * @param {number} numOfCols - Represents the number of columns for each row.
@@ -418,7 +443,13 @@ const displayController = (() => {
     });
   };
 
-  return { createBoard, updateBoard, getBoardContainer, resetDisplay };
+  return {
+    updatePlayerCardName,
+    createBoard,
+    updateBoard,
+    getBoardContainer,
+    resetDisplay,
+  };
 })();
 
 gameController();
