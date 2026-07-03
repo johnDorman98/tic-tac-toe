@@ -254,8 +254,8 @@ const gameController = () => {
   display.createBoard(rows, cols);
 
   // Setup player objects and starting current player.
-  const firstPlayerNameElement = document.querySelector("#first-player-name");
-  const secondPlayerNameElement = document.querySelector("#second-player-name");
+  const firstPlayerNameElement = document.querySelector("#first-player-name").textContent;
+  const secondPlayerNameElement = document.querySelector("#second-player-name").textContent;
   const player1 = player(firstPlayerNameElement, "X");
   const player2 = player(secondPlayerNameElement, "O");
 
@@ -330,7 +330,7 @@ const gameController = () => {
       );
 
       if (gameOverResult === currentPlayer.marker) {
-        const gameOverMessage = `Game over! ${currentPlayer.name} Wins!`;
+        const gameOverMessage = `Game over! ${currentPlayer.getName()} Wins!`;
         outcomeFeedback.textContent = gameOverMessage;
         setTimeout(() => {
           outcomeModal.showModal();
