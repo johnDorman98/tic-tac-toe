@@ -254,10 +254,14 @@ const gameController = () => {
   display.createBoard(rows, cols);
 
   // Setup player objects and starting current player.
-  const firstPlayerNameElement = document.querySelector("#first-player-name").textContent;
-  const secondPlayerNameElement = document.querySelector("#second-player-name").textContent;
+  const firstPlayerNameElement =
+    document.querySelector("#first-player-name").textContent;
+  const secondPlayerNameElement = document.querySelector(
+    "#second-player-name",
+  ).textContent;
   const player1 = player(firstPlayerNameElement, "X");
   const player2 = player(secondPlayerNameElement, "O");
+  let playerBeingEdited = null;
 
   let currentPlayer = player1;
 
@@ -270,7 +274,7 @@ const gameController = () => {
   const outcomeModalClose = document.querySelector("#game-outcome-close");
   const playerConfigModal = document.querySelector("#player-config-modal");
   const playerConfigForm = document.querySelector("#player-config-form");
-  const updateNameButton = document.querySelector("#update-name-button");
+  const updateNameButtons = document.querySelectorAll(".update-name-button");
 
   /**
    * Handle updating the current players name and closing the modal when the new name is entered.
@@ -281,19 +285,21 @@ const gameController = () => {
 
     if (newPlayerName) {
       let playerNameElementId = "";
-      currentPlayer.setName(newPlayerName);
 
       // Determine element ID to be updated.
-      if (currentPlayer === player1) {
+      if (playerBeingEdited === "player1") {
         playerNameElementId = "first-player-name";
-      } else if (currentPlayer === player2) {
+        player1.setName(newPlayerName);
+      } else if (playerBeingEdited === "player2") {
         playerNameElementId = "second-player-name";
+        player2.setName(newPlayerName);
       }
 
-      display.updatePlayerCardName(
-        playerNameElementId,
-        currentPlayer.getName(),
-      );
+      // Only attempt to update the name on the player card, if id was set.
+      if (playerNameElementId) {
+        display.updatePlayerCardName(playerNameElementId, newPlayerName);
+      }
+
       setTimeout(() => {
         playerConfigModal.close();
         event.target.reset();
@@ -302,10 +308,15 @@ const gameController = () => {
   });
 
   /**
-   * Handles opening the modal for updating the users name.
+   * Add event listener to each of the name update buttons.
    */
-  updateNameButton.addEventListener("click", () => {
-    playerConfigModal.showModal();
+  updateNameButtons.forEach((node, index) => {
+    node.addEventListener("click", (event) => {
+      // Extract unique data attribute to identify player being modified.
+      playerBeingEdited = event.target.dataset.player;
+
+      playerConfigModal.showModal();
+    });
   });
 
   /**
@@ -366,6 +377,7 @@ const gameController = () => {
   resetButtonElement.addEventListener("click", () => {
     board.resetBoard();
     display.resetDisplay();
+    display.resetPlayerCards();
     currentPlayer = player1;
     isGameOver = false;
     outcomeFeedback.textContent = "";
@@ -443,12 +455,37 @@ const displayController = (() => {
     });
   };
 
+  /**
+   * Responsible for resetting the name and score for each of the player cards.
+   * Resets the values to the default values.
+   */
+  const resetPlayerCards = () => {
+    // first-player-name + first-player-score
+    // second-player-name + second-player-score
+    const firstPlayerNameElement = document.querySelector("#first-player-name");
+    const firstPlayerScoreElement = document.querySelector(
+      "#first-player-score",
+    );
+    const secondPlayerNameElement = document.querySelector(
+      "#second-player-name",
+    );
+    const secondPlayerScoreElement = document.querySelector(
+      "#second-player-score",
+    );
+
+    firstPlayerNameElement.textContent = "Player1";
+    firstPlayerScoreElement.textContent = "0";
+    secondPlayerNameElement.textContent = "Player2";
+    secondPlayerScoreElement.textContent = "0";
+  };
+
   return {
     updatePlayerCardName,
     createBoard,
     updateBoard,
     getBoardContainer,
     resetDisplay,
+    resetPlayerCards,
   };
 })();
 
