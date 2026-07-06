@@ -375,6 +375,8 @@ const gameController = () => {
    * Responsible for resetting the game state, board, and UI if reset button is pressed.
    */
   resetButtonElement.addEventListener("click", () => {
+    player1.setName("Player1");
+    player2.setName("Player2");
     board.resetBoard();
     display.resetDisplay();
     display.resetPlayerCards();
