@@ -88,7 +88,7 @@ const player = (initialName, marker) => {
    * @memberof player
    * @returns {string} Returns the players name.
    */
-  getName = () => {
+  const getName = () => {
     return name;
   };
 
@@ -97,7 +97,7 @@ const player = (initialName, marker) => {
    * @param {string} updatedName - New value for players name.
    * @memberof player
    */
-  setName = (updatedName) => {
+  const setName = (updatedName) => {
     name = updatedName;
   };
 
@@ -106,18 +106,27 @@ const player = (initialName, marker) => {
    * @memberof player
    * @returns {number} Returns the players score.
    */
-  getScore = () => {
+  const getScore = () => {
     return score;
   };
 
   /**
    * Increments the players current score by one.
+   * @memberof player
    */
-  incrementScore = () => {
+  const incrementScore = () => {
     score++;
   };
 
-  return { marker, getName, setName, getScore, incrementScore };
+  /**
+   * Resets the score back to the default of 0.
+   * @memberof player
+   */
+  const resetScore = () => {
+    score = 0;
+  };
+
+  return { marker, getName, setName, getScore, incrementScore, resetScore };
 };
 
 /**
@@ -229,6 +238,21 @@ const gameController = () => {
   };
 
   /**
+   * Responsible for returning a different element ID based on the player object
+   * @param {Object} player - Represents the current player object.
+   * @returns {string} The ID for the score based on the player, else an empty string.
+   */
+  const getPlayerScoreId = (player) => {
+    if (player === player1) {
+      return "first-player-score"
+    } else if (player === player2) {
+      return "second-player-score"
+    } else {
+      return ""
+    }
+  }
+
+  /**
    * Responsible for checking if a game over condition is met using helper functions.
    * @param {string} marker - The players maker to check.
    * @param {string[][]} boardToCheck - The board to be checked for a game over condition.
@@ -275,6 +299,8 @@ const gameController = () => {
   const playerConfigModal = document.querySelector("#player-config-modal");
   const playerConfigForm = document.querySelector("#player-config-form");
   const updateNameButtons = document.querySelectorAll(".update-name-button");
+  const nextRoundButtonElement = document.querySelector("#next-round-button");
+  const turnIndicatorElement = document.querySelector("#turn-indicator");
 
   /**
    * Handle updating the current players name and closing the modal when the new name is entered.
@@ -347,6 +373,10 @@ const gameController = () => {
           outcomeModal.showModal();
         }, 100);
         isGameOver = true;
+        currentPlayer.incrementScore()
+        const playerScoreId = getPlayerScoreId(currentPlayer);
+        display.updatePlayerCardScore(playerScoreId, currentPlayer.getScore())
+        nextRoundButtonElement.classList.remove("hidden");
       } else if (gameOverResult === "draw") {
         const gameOverMessage = "Game over! Draw!";
         outcomeFeedback.textContent = gameOverMessage;
@@ -354,6 +384,7 @@ const gameController = () => {
           outcomeModal.showModal();
         }, 100);
         isGameOver = true;
+        nextRoundButtonElement.classList.remove("hidden");
       } else {
         currentPlayer = currentPlayer === player1 ? player2 : player1;
       }
@@ -372,11 +403,25 @@ const gameController = () => {
   });
 
   /**
+   * Handles resetting the game board state to play a new round.
+   */
+  nextRoundButtonElement.addEventListener("click", () => {
+    board.resetBoard();
+    display.resetDisplay();
+    currentPlayer = player1;
+    isGameOver = false;
+    outcomeFeedback.textContent = "";
+    nextRoundButtonElement.classList.add("hidden");
+  });
+
+  /**
    * Responsible for resetting the game state, board, and UI if reset button is pressed.
    */
   resetButtonElement.addEventListener("click", () => {
     player1.setName("Player1");
     player2.setName("Player2");
+    player1.resetScore();
+    player2.resetScore();
     board.resetBoard();
     display.resetDisplay();
     display.resetPlayerCards();
@@ -399,6 +444,16 @@ const displayController = (() => {
   const updatePlayerCardName = (playerCardNameId, newName) => {
     const selectedPlayerName = document.querySelector(`#${playerCardNameId}`);
     selectedPlayerName.textContent = newName;
+  };
+
+  /**
+   * Updates the score for the player card.
+   * @param {string} playerCardScoreId - Represents the ID for the current player score element.
+   * @param {Number} score - The new score for the player.
+   */
+  const updatePlayerCardScore = (playerCardScoreId, score) => {
+    const selectedPlayerScore = document.querySelector(`#${playerCardScoreId}`);
+    selectedPlayerScore.textContent = score;
   };
 
   /**
@@ -483,6 +538,7 @@ const displayController = (() => {
 
   return {
     updatePlayerCardName,
+    updatePlayerCardScore,
     createBoard,
     updateBoard,
     getBoardContainer,
