@@ -288,6 +288,7 @@ const gameController = () => {
   let playerBeingEdited = null;
 
   let currentPlayer = player1;
+  display.updateTurnIndicator(currentPlayer.getName());
 
   let isGameOver = false;
 
@@ -300,7 +301,6 @@ const gameController = () => {
   const playerConfigForm = document.querySelector("#player-config-form");
   const updateNameButtons = document.querySelectorAll(".update-name-button");
   const nextRoundButtonElement = document.querySelector("#next-round-button");
-  const turnIndicatorElement = document.querySelector("#turn-indicator");
 
   /**
    * Handle updating the current players name and closing the modal when the new name is entered.
@@ -324,6 +324,7 @@ const gameController = () => {
       // Only attempt to update the name on the player card, if id was set.
       if (playerNameElementId) {
         display.updatePlayerCardName(playerNameElementId, newPlayerName);
+        display.updateTurnIndicator(currentPlayer.getName());
       }
 
       setTimeout(() => {
@@ -387,11 +388,8 @@ const gameController = () => {
         nextRoundButtonElement.classList.remove("hidden");
       } else {
         currentPlayer = currentPlayer === player1 ? player2 : player1;
+        displayController.updateTurnIndicator(currentPlayer.getName());
       }
-    } else {
-      const gameOverMessage = `${currentPlayer.marker} not placed, please select an empty cell.`;
-      outcomeFeedback.textContent = gameOverMessage;
-      outcomeModal.showModal();
     }
   });
 
@@ -409,6 +407,7 @@ const gameController = () => {
     board.resetBoard();
     display.resetDisplay();
     currentPlayer = player1;
+    display.updateTurnIndicator(currentPlayer.getName());
     isGameOver = false;
     outcomeFeedback.textContent = "";
     nextRoundButtonElement.classList.add("hidden");
@@ -418,14 +417,15 @@ const gameController = () => {
    * Responsible for resetting the game state, board, and UI if reset button is pressed.
    */
   resetButtonElement.addEventListener("click", () => {
-    player1.setName("Player1");
-    player2.setName("Player2");
+    player1.setName("Player 1");
+    player2.setName("Player 2");
     player1.resetScore();
     player2.resetScore();
     board.resetBoard();
     display.resetDisplay();
     display.resetPlayerCards();
     currentPlayer = player1;
+    display.updateTurnIndicator(currentPlayer.getName());
     isGameOver = false;
     outcomeFeedback.textContent = "";
   });
@@ -455,6 +455,15 @@ const displayController = (() => {
     const selectedPlayerScore = document.querySelector(`#${playerCardScoreId}`);
     selectedPlayerScore.textContent = score;
   };
+
+  /**
+   * Handles updating the turn indicator with the current players name.
+   * @param {string} name - The name of the current player, to indicate their turn.
+   */
+  const updateTurnIndicator = (name) => {
+    const turnIndicatorElement = document.querySelector("#turn-indicator");
+    turnIndicatorElement.textContent = `${name}'s Turn`;
+  }
 
   /**
    * Responsible for populate the game container with cells to create the UI.
@@ -530,9 +539,9 @@ const displayController = (() => {
       "#second-player-score",
     );
 
-    firstPlayerNameElement.textContent = "Player1";
+    firstPlayerNameElement.textContent = "Player 1";
     firstPlayerScoreElement.textContent = "0";
-    secondPlayerNameElement.textContent = "Player2";
+    secondPlayerNameElement.textContent = "Player 2";
     secondPlayerScoreElement.textContent = "0";
   };
 
@@ -544,11 +553,8 @@ const displayController = (() => {
     getBoardContainer,
     resetDisplay,
     resetPlayerCards,
+    updateTurnIndicator,
   };
 })();
 
 gameController();
-
-// TODO:
-// Should input validation be done in the game controller
-// Would the game controller be responsible for managing the marker selection between two players or would it be random.
