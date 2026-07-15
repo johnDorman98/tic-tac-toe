@@ -8,8 +8,8 @@
   </head>
 
   <body>
-    <header>
-      <h1>Tic Tac Toe</h1>
+    <header class="navbar">
+      <h1 class="navbar-title">Tic Tac Toe</h1>
     </header>
     <main class="main-container">
       <dialog id="game-outcome-modal">
@@ -37,8 +37,10 @@
       </div>
       <div id="turn-indicator" class="turn-indicator"></div>
       <div id="game-container" class="game-container"></div>
-      <button type="reset" class="restart-button">Restart</button>
-      <button id="next-round-button" type="button" class="next-round-button hidden">Play Again</button>
+      <div class="game-control-buttons">
+        <button type="reset" class="restart-button">Restart</button>
+        <button id="next-round-button" type="button" class="next-round-button hidden">Play Again</button>
+      </div>
     </main>
     <footer>
       <p>Copyright text</p>

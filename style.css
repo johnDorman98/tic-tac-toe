@@ -97,32 +97,64 @@ body {
   height: 100vh;
 }
 
+/* Header styling */
+.navbar {
+  width: 100%;
+  padding: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+}
+
+.navbar-title {
+  color: var(--text-primary);
+  font-weight: 500;
+  letter-spacing: 0.05rem;
+  text-transform: uppercase;
+}
+
+/* Main container styling */
 .main-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: var(--grid-gap);
   flex: 1;
   max-width: 600px;
   width: 90%;
 }
 
+/* Score board styling */
 .score-board {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: var(--grid-gap);
   width: 100%;
+  margin-top: var(--grid-gap);
 }
 
+/* Player card styling */
 .player-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.5rem;
   flex: 1;
   background-color: var(--surface-color);
-  padding: var(--container-padding);
+  padding: 0.5rem;
   border-radius: var(--radius-board);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.player-score {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Game controller styling */
 .game-container {
   display: grid;
   grid-template-rows: repeat(3, 1fr);
