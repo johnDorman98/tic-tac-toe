@@ -148,10 +148,50 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.player-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.03rem;
+}
+
+.player-card.player-x .player-name {
+  color: var(--color-player-x);
+}
+
+.player-card.player-o .player-name {
+  color: var(--color-player-o);
+}
+
 .player-score {
   font-size: 3rem;
   font-weight: 700;
   color: var(--text-primary);
+}
+
+.update-name-button {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-cell);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.2s ease, color 0.2s ease
+}
+
+.update-name-button:hover {
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+.player-card.player-x .update-name-button:focus-visible {
+  outline: 2px solid var(--color-player-x);
+  outline-offset: 2px;
+}
+
+.player-card.player-o .update-name-button:focus-visible {
+  outline: 2px solid var(--color-player-o);
+  outline-offset: 2px;
 }
 
 /* Game controller styling */
