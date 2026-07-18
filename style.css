@@ -120,7 +120,7 @@ body {
   align-items: center;
   gap: var(--grid-gap);
   flex: 1;
-  max-width: 600px;
+  max-width: 800px;
   width: 90%;
 }
 
@@ -194,11 +194,18 @@ body {
   outline-offset: 2px;
 }
 
+/* Turn indicator styling */
+.turn-indicator {
+  color: var(--text-muted);
+  font-weight: 500;
+  text-align: center;
+}
+
 /* Game controller styling */
 .game-container {
   display: grid;
   grid-template-rows: repeat(3, 1fr);
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--grid-gap);
   width: 100%;
   border-radius: var(--radius-board);
@@ -208,12 +215,87 @@ body {
 }
 
 .game-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: clamp(1rem, 10vw, 4rem);
   aspect-ratio: 1 / 1;
   border-radius: var(--radius-cell);
   background-color: rgba(255, 255, 255, 0.08);
   border: none;
 }
 
+.game-cell.x-marker {
+  color: var(--color-player-x);
+  text-shadow: 0 0 10px var(--color-player-x);
+}
+
+.game-cell.o-marker {
+  color: var(--color-player-o);
+  text-shadow: 0 0 10px var(--color-player-o);
+}
+
+/* Game control and button styling */
+.game-control-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: var(--grid-gap);
+  width: 100%;
+}
+
+.restart-button, .next-round-button {
+  flex: 1;
+  padding: 1rem 2rem;
+  border-radius: var(--radius-cell);
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  font-weight: 600;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+  width: 100%;
+}
+
+/* Styling for next round button to make it stand out. */
+.next-round-button {
+  background-color: var(--text-primary);
+  color: var(--bg-color);
+}
+
+.next-round-button:hover {
+  opacity: 0.9;
+}
+
+.restart-button:hover {
+  background-color: var(--surface-container);
+}
+
+.restart-button:focus-visible, .next-round-button:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+.restart-button:focus-visible {
+  background-color: var(--surface-container);     
+}
+
+/* Dialog box styling */
+dialog {
+  background-color: var(--surface-color);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-board);
+  color: var(--text-primary);
+}
+
+dialog::backdrop {
+  background-color: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(5px);
+}
+
+/* Helper class to hide elements */
 .hidden {
   display: none;
 }
+

@@ -494,10 +494,12 @@ const displayController = (() => {
    * @memberof displayController
    */
   const updateBoard = (row, col, marker) => {
+    const dynamicMarkerClass = `${marker.toLocaleLowerCase()}-marker`
     const selectedCell = document.querySelector(
       `[data-row="${row}"][data-col="${col}"]`,
     );
     selectedCell.textContent = marker;
+    selectedCell.classList.add(dynamicMarkerClass);
   };
 
   /**
