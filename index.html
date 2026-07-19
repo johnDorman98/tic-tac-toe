@@ -13,13 +13,15 @@
     </header>
     <main class="main-container">
       <dialog id="game-outcome-modal">
-        <p id="game-outcome"></p>
-        <button id="game-outcome-close" autofocus>Close</button>
+        <div class="game-outcome-container">
+          <p id="game-outcome"></p>
+          <button id="game-outcome-close" autofocus>Close</button>
+        </div>
       </dialog>
       <dialog id="player-config-modal">
         <form method="dialog" id="player-config-form">
           <label for="new-player-name">Enter Name:</label>
-          <input type="text" name="new-player-name" id="new-player-name"/>
+          <input type="text" name="new-player-name" id="new-player-name" required/>
           <button type="submit" id="player-config-save">Save</button>
         </form>
       </dialog>
@@ -43,7 +45,7 @@
       </div>
     </main>
     <footer>
-      <p>Copyright text</p>
+      <p>&copy;<span class="footer-year">2025</span> Made by John for The Odin Project</p>
     </footer>
     <script src="script.js"></script>
   </body>

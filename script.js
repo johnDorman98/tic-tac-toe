@@ -244,13 +244,13 @@ const gameController = () => {
    */
   const getPlayerScoreId = (player) => {
     if (player === player1) {
-      return "first-player-score"
+      return "first-player-score";
     } else if (player === player2) {
-      return "second-player-score"
+      return "second-player-score";
     } else {
-      return ""
+      return "";
     }
-  }
+  };
 
   /**
    * Responsible for checking if a game over condition is met using helper functions.
@@ -276,6 +276,7 @@ const gameController = () => {
   const display = displayController;
   const boardContainerElement = display.getBoardContainer();
   display.createBoard(rows, cols);
+  display.initialiseFooterYear();
 
   // Setup player objects and starting current player.
   const firstPlayerNameElement =
@@ -301,6 +302,7 @@ const gameController = () => {
   const playerConfigForm = document.querySelector("#player-config-form");
   const updateNameButtons = document.querySelectorAll(".update-name-button");
   const nextRoundButtonElement = document.querySelector("#next-round-button");
+  const dialogElements = document.querySelectorAll("dialog");
 
   /**
    * Handle updating the current players name and closing the modal when the new name is entered.
@@ -374,9 +376,9 @@ const gameController = () => {
           outcomeModal.showModal();
         }, 100);
         isGameOver = true;
-        currentPlayer.incrementScore()
+        currentPlayer.incrementScore();
         const playerScoreId = getPlayerScoreId(currentPlayer);
-        display.updatePlayerCardScore(playerScoreId, currentPlayer.getScore())
+        display.updatePlayerCardScore(playerScoreId, currentPlayer.getScore());
         nextRoundButtonElement.classList.remove("hidden");
       } else if (gameOverResult === "draw") {
         const gameOverMessage = "Game over! Draw!";
@@ -429,6 +431,32 @@ const gameController = () => {
     isGameOver = false;
     outcomeFeedback.textContent = "";
   });
+
+  /**
+   * Handles clicks on each dialog element to close the element when clicked away.
+   */
+  dialogElements.forEach(element => {
+    element.addEventListener("click", (event) => {
+      // Get valid boundary for modal.
+      const validBoundary = element.getBoundingClientRect();
+      
+      // Calculate if click landed outside of boundary.
+      const isTooFarLeft = event.clientX < validBoundary.left
+      const isTooFarRight = event.clientX > validBoundary.right
+      const isTooFarAbove = event.clientY < validBoundary.top
+      const isTooFarBelow = event.clientY > validBoundary.bottom 
+
+      // Ensure that the click falls outside the valid boundary for the dialog box.
+      if (isTooFarLeft || isTooFarRight || isTooFarAbove || isTooFarBelow) {
+        element.close()
+        
+        if (element.id === "player-config-modal") {
+          const nestedForm = element.querySelector("form");
+          nestedForm.reset()
+        }
+      }
+    })
+  })
 };
 
 /**
@@ -463,7 +491,7 @@ const displayController = (() => {
   const updateTurnIndicator = (name) => {
     const turnIndicatorElement = document.querySelector("#turn-indicator");
     turnIndicatorElement.textContent = `${name}'s Turn`;
-  }
+  };
 
   /**
    * Responsible for populate the game container with cells to create the UI.
@@ -494,7 +522,7 @@ const displayController = (() => {
    * @memberof displayController
    */
   const updateBoard = (row, col, marker) => {
-    const dynamicMarkerClass = `${marker.toLocaleLowerCase()}-marker`
+    const dynamicMarkerClass = `${marker.toLocaleLowerCase()}-marker`;
     const selectedCell = document.querySelector(
       `[data-row="${row}"][data-col="${col}"]`,
     );
@@ -520,6 +548,10 @@ const displayController = (() => {
     const boardCells = document.querySelectorAll(".game-cell");
     boardCells.forEach((node, index) => {
       node.textContent = "";
+      node.classList.remove("x-marker", "o-marker");
+      
+      // Switch focus to the first cell once the board has been reset.
+      boardCells[0].focus()
     });
   };
 
@@ -547,6 +579,12 @@ const displayController = (() => {
     secondPlayerScoreElement.textContent = "0";
   };
 
+  const initialiseFooterYear = () => {
+    const footerYearSpan = document.querySelector(".footer-year");
+    const currentYear = new Date().getFullYear();
+    footerYearSpan.textContent = currentYear;
+  }
+
   return {
     updatePlayerCardName,
     updatePlayerCardScore,
@@ -556,6 +594,7 @@ const displayController = (() => {
     resetDisplay,
     resetPlayerCards,
     updateTurnIndicator,
+    initialiseFooterYear,
   };
 })();
 

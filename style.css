@@ -1,15 +1,15 @@
 /* Typography and CSS variables */
 :root {
   /* Colors */
-  --bg-color: #12131a;
-  --surface-color: #1f1f27;
-  --surface-container: #292931;
-  --text-primary: #e4e1ec;
-  --text-muted: #b9cacb;
+  --bg-color: #0d1b2a;
+  --surface-color: #1b263b;
+  --surface-container: #24334c;
+  --text-primary: #e0e1dd;
+  --text-muted: #415a77;
 
   /* Player Accents */
-  --color-player-x: #00f0ff;
-  --color-player-o: #ebb2ff;
+  --color-player-x: #ff007f;
+  --color-player-o: #00f5d4;
 
   /* Layout & Geometry */
   --radius-cell: 1rem;
@@ -94,7 +94,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 /* Header styling */
@@ -120,7 +120,7 @@ body {
   align-items: center;
   gap: var(--grid-gap);
   flex: 1;
-  max-width: 800px;
+  max-width: 700px;
   width: 90%;
 }
 
@@ -176,7 +176,9 @@ body {
   font-size: 0.85rem;
   font-weight: 700;
   padding: 0.5rem 1rem;
-  transition: background-color 0.2s ease, color 0.2s ease
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .update-name-button:hover {
@@ -204,10 +206,10 @@ body {
 /* Game controller styling */
 .game-container {
   display: grid;
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-rows: repeat(3, minmax(0, 1fr));
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--grid-gap);
-  width: 100%;
+  width: min(90vw, 50vh);
   border-radius: var(--radius-board);
   background-color: var(--surface-container);
   padding: var(--container-padding);
@@ -219,20 +221,30 @@ body {
   justify-content: center;
   align-items: center;
   font-size: clamp(1rem, 10vw, 4rem);
+  font-weight: 600;
   aspect-ratio: 1 / 1;
   border-radius: var(--radius-cell);
   background-color: rgba(255, 255, 255, 0.08);
   border: none;
 }
 
+.game-cell:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
 .game-cell.x-marker {
   color: var(--color-player-x);
-  text-shadow: 0 0 10px var(--color-player-x);
+  text-shadow:
+    0 0 2px rgba(255, 255, 255, 0.8),
+    0 0 10px var(--color-player-x);
 }
 
 .game-cell.o-marker {
   color: var(--color-player-o);
-  text-shadow: 0 0 10px var(--color-player-o);
+  text-shadow:
+    0 0 2px rgba(255, 255, 255, 0.8),
+    0 0 10px var(--color-player-o);
 }
 
 /* Game control and button styling */
@@ -245,7 +257,8 @@ body {
   width: 100%;
 }
 
-.restart-button, .next-round-button {
+.restart-button,
+.next-round-button {
   flex: 1;
   padding: 1rem 2rem;
   border-radius: var(--radius-cell);
@@ -253,7 +266,9 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--text-primary);
   font-weight: 600;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
   cursor: pointer;
   width: 100%;
 }
@@ -272,13 +287,14 @@ body {
   background-color: var(--surface-container);
 }
 
-.restart-button:focus-visible, .next-round-button:focus-visible {
+.restart-button:focus-visible,
+.next-round-button:focus-visible {
   outline: 2px solid var(--text-primary);
   outline-offset: 2px;
 }
 
 .restart-button:focus-visible {
-  background-color: var(--surface-container);     
+  background-color: var(--surface-container);
 }
 
 /* Dialog box styling */
@@ -287,15 +303,88 @@ dialog {
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-board);
   color: var(--text-primary);
+  width: 90%;
+  max-width: 600px;
+  padding: var(--container-padding);
 }
 
 dialog::backdrop {
-  background-color: rgba(255, 255, 255, 0.10);
+  background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(5px);
+}
+
+#player-config-form,
+.game-outcome-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--grid-gap);
+}
+
+#player-config-form label {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+#new-player-name {
+  background-color: var(--surface-container);
+  border-radius: var(--radius-board);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem;
+}
+
+#new-player-name:focus,
+#new-player-name:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+#player-config-save,
+#game-outcome-close {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-cell);
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  font-weight: 600;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  cursor: pointer;
+  width: 100%;
+}
+
+#player-config-save:hover,
+#game-outcome-close:hover {
+  background-color: var(--surface-container);
+}
+
+#player-config-save:focus-visible,
+#game-outcome-close:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+#game-outcome {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Footer styling */
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: auto;
+  color: var(--text-muted);
+  padding: 1rem 2rem;
+  width: 100%;
 }
 
 /* Helper class to hide elements */
 .hidden {
   display: none;
 }
-
