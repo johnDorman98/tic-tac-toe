@@ -59,7 +59,7 @@ Once loaded, follow the **How to Play** section above. No further installation o
 
 ## Play the Game
 
-Link to be added
+Play the live game here: [https://johndorman98.github.io/tic-tac-toe/](https://johndorman98.github.io/tic-tac-toe/)
 
 ## Technologies Used
 
