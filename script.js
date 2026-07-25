@@ -308,8 +308,10 @@ const gameController = () => {
    * Handle updating the current players name and closing the modal when the new name is entered.
    */
   playerConfigForm.addEventListener("submit", (event) => {
+
     event.preventDefault();
-    const newPlayerName = event.target.elements["new-player-name"].value.trim();
+    const newPlayerNameInputElement = event.target.elements["new-player-name"];
+    const newPlayerName = newPlayerNameInputElement.value.trim();
 
     if (newPlayerName) {
       let playerNameElementId = "";
@@ -336,6 +338,18 @@ const gameController = () => {
     }
   });
 
+  /**
+   * Handles closing the player-config-modal when the Cancel button is clicked.
+  */
+ const playerConfigCancelButton = document.querySelector("#player-config-cancel");
+ if (playerConfigCancelButton) {
+   playerConfigCancelButton.addEventListener("click", (event) => {
+     event.preventDefault();
+     playerConfigModal.close();
+     playerConfigForm.reset();
+    });
+  }
+  
   /**
    * Add event listener to each of the name update buttons.
    */
@@ -426,6 +440,7 @@ const gameController = () => {
     board.resetBoard();
     display.resetDisplay();
     display.resetPlayerCards();
+    nextRoundButtonElement.classList.add("hidden");
     currentPlayer = player1;
     display.updateTurnIndicator(currentPlayer.getName());
     isGameOver = false;
@@ -435,28 +450,30 @@ const gameController = () => {
   /**
    * Handles clicks on each dialog element to close the element when clicked away.
    */
-  dialogElements.forEach(element => {
+  dialogElements.forEach((element) => {
     element.addEventListener("click", (event) => {
-      // Get valid boundary for modal.
-      const validBoundary = element.getBoundingClientRect();
-      
-      // Calculate if click landed outside of boundary.
-      const isTooFarLeft = event.clientX < validBoundary.left
-      const isTooFarRight = event.clientX > validBoundary.right
-      const isTooFarAbove = event.clientY < validBoundary.top
-      const isTooFarBelow = event.clientY > validBoundary.bottom 
+      if (event.target === element) {
+        // Get valid boundary for modal.
+        const validBoundary = element.getBoundingClientRect();
 
-      // Ensure that the click falls outside the valid boundary for the dialog box.
-      if (isTooFarLeft || isTooFarRight || isTooFarAbove || isTooFarBelow) {
-        element.close()
-        
-        if (element.id === "player-config-modal") {
-          const nestedForm = element.querySelector("form");
-          nestedForm.reset()
+        // Calculate if click landed outside of boundary.
+        const isTooFarLeft = event.clientX < validBoundary.left;
+        const isTooFarRight = event.clientX > validBoundary.right;
+        const isTooFarAbove = event.clientY < validBoundary.top;
+        const isTooFarBelow = event.clientY > validBoundary.bottom;
+
+        // Ensure that the click falls outside the valid boundary for the dialog box.
+        if (isTooFarLeft || isTooFarRight || isTooFarAbove || isTooFarBelow) {
+          element.close();
+
+          if (element.id === "player-config-modal") {
+            const nestedForm = element.querySelector("form");
+            nestedForm.reset();
+          }
         }
       }
-    })
-  })
+    });
+  });
 };
 
 /**
@@ -549,9 +566,9 @@ const displayController = (() => {
     boardCells.forEach((node, index) => {
       node.textContent = "";
       node.classList.remove("x-marker", "o-marker");
-      
+
       // Switch focus to the first cell once the board has been reset.
-      boardCells[0].focus()
+      boardCells[0].focus();
     });
   };
 
@@ -583,7 +600,7 @@ const displayController = (() => {
     const footerYearSpan = document.querySelector(".footer-year");
     const currentYear = new Date().getFullYear();
     footerYearSpan.textContent = currentYear;
-  }
+  };
 
   return {
     updatePlayerCardName,
