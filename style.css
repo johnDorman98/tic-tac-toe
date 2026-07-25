@@ -257,8 +257,10 @@ body {
   width: 100%;
 }
 
+/* Base button styles shared by game control buttons and dialog buttons */
 .restart-button,
-.next-round-button {
+.next-round-button,
+.dialog-button {
   flex: 1;
   padding: 1rem 2rem;
   border-radius: var(--radius-cell);
@@ -273,27 +275,33 @@ body {
   width: 100%;
 }
 
-/* Styling for next round button to make it stand out. */
-.next-round-button {
+/* Primary action buttons (prominent) - like "Next Round" and "Save" */
+.next-round-button,
+.dialog-button-primary {
   background-color: var(--text-primary);
   color: var(--bg-color);
 }
 
-.next-round-button:hover {
+.next-round-button:hover,
+.dialog-button-primary:hover {
   opacity: 0.9;
 }
 
-.restart-button:hover {
+/* Secondary action buttons (subtle) - like "Restart" and "Cancel" */
+.restart-button:hover,
+.dialog-button-secondary:hover {
   background-color: var(--surface-container);
 }
 
 .restart-button:focus-visible,
-.next-round-button:focus-visible {
+.next-round-button:focus-visible,
+.dialog-button:focus-visible {
   outline: 2px solid var(--text-primary);
   outline-offset: 2px;
 }
 
-.restart-button:focus-visible {
+.restart-button:focus-visible,
+.dialog-button-secondary:focus-visible {
   background-color: var(--surface-container);
 }
 
@@ -341,7 +349,19 @@ dialog::backdrop {
   outline-offset: 2px;
 }
 
-#player-config-save,
+.dialog-button {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-cell);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 600;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  cursor: pointer;
+  width: 100%;
+}
+
 #game-outcome-close {
   flex: 1;
   padding: 0.5rem 1rem;
@@ -357,12 +377,10 @@ dialog::backdrop {
   width: 100%;
 }
 
-#player-config-save:hover,
 #game-outcome-close:hover {
   background-color: var(--surface-container);
 }
 
-#player-config-save:focus-visible,
 #game-outcome-close:focus-visible {
   outline: 2px solid var(--text-primary);
   outline-offset: 2px;
