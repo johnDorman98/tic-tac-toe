@@ -27,7 +27,7 @@ const gameBoard = (() => {
    * @memberof gameBoard
    * @returns {boolean} Returns true if the marker was placed successfully, false otherwise.
    */
-  addMarker = (row, col, marker) => {
+  const addMarker = (row, col, marker) => {
     if (row < rows && row >= 0 && col < cols && col >= 0) {
       if (board[row][col] === "") {
         board[row][col] = marker;
@@ -43,7 +43,7 @@ const gameBoard = (() => {
    * @memberof gameBoard
    * @returns {string[][]} Returns the game board to help protect the board.
    */
-  getBoard = () => {
+  const getBoard = () => {
     return board;
   };
 
@@ -53,7 +53,7 @@ const gameBoard = (() => {
    * @returns {{rows: number, cols: number}} Returns an object containing the number of rows and columns
    *  used to create the board.
    */
-  getBoardSize = () => {
+  const getBoardSize = () => {
     return { rows, cols };
   };
 
@@ -61,7 +61,7 @@ const gameBoard = (() => {
    * Responsible for resetting the game board back to its initial state.
    * @memberof gameBoard
    */
-  resetBoard = () => {
+  const resetBoard = () => {
     for (let row = 0; row < board.length; row++) {
       for (let col = 0; col < board[row].length; col++) {
         board[row][col] = "";
@@ -130,9 +130,148 @@ const player = (initialName, marker) => {
 };
 
 /**
+ * Responsible for updating the UI with the current state of the game board.
+ * @namespace displayController
+ */
+const displayController = (() => {
+  /**
+   * Handles updating the UI for the player name.
+   * @param {string} playerCardNameId - Represents the ID for the current player name element.
+   * @param {string} newName - The current players new name.
+   */
+  const updatePlayerCardName = (playerCardNameId, newName) => {
+    const selectedPlayerName = document.querySelector(`#${playerCardNameId}`);
+    selectedPlayerName.textContent = newName;
+  };
+
+  /**
+   * Updates the score for the player card.
+   * @param {string} playerCardScoreId - Represents the ID for the current player score element.
+   * @param {Number} score - The new score for the player.
+   */
+  const updatePlayerCardScore = (playerCardScoreId, score) => {
+    const selectedPlayerScore = document.querySelector(`#${playerCardScoreId}`);
+    selectedPlayerScore.textContent = score;
+  };
+
+  /**
+   * Handles updating the turn indicator with the current players name.
+   * @param {string} name - The name of the current player, to indicate their turn.
+   */
+  const updateTurnIndicator = (name) => {
+    const turnIndicatorElement = document.querySelector("#turn-indicator");
+    turnIndicatorElement.textContent = `${name}'s Turn`;
+  };
+
+  /**
+   * Responsible for populate the game container with cells to create the UI.
+   * @param {number} numOfRows - Represents the number of rows for the board to be created.
+   * @param {number} numOfCols - Represents the number of columns for each row.
+   * @memberof displayController
+   */
+  const createBoard = (numOfRows, numOfCols) => {
+    const boardContainer = document.querySelector("#game-container");
+
+    for (let row = 0; row < numOfRows; row++) {
+      for (let col = 0; col < numOfCols; col++) {
+        const cell = document.createElement("button");
+        cell.classList.add("game-cell");
+        cell.dataset.row = row;
+        cell.dataset.col = col;
+        cell.textContent = "";
+        boardContainer.appendChild(cell);
+      }
+    }
+  };
+
+  /**
+   * Handles updating the UI board with players marker depending on the clicked cell.
+   * @param {number} row - The selected row for the selected cell.
+   * @param {number} col - The selected column for the selected cell.
+   * @param {string} marker - The marker to be placed within the board on the UI.
+   * @memberof displayController
+   */
+  const updateBoard = (row, col, marker) => {
+    const dynamicMarkerClass = `${marker.toLocaleLowerCase()}-marker`;
+    const selectedCell = document.querySelector(
+      `[data-row="${row}"][data-col="${col}"]`,
+    );
+    selectedCell.textContent = marker;
+    selectedCell.classList.add(dynamicMarkerClass);
+  };
+
+  /**
+   * Responsible for protecting and returning the game-container element safely.
+   * @memberof displayController
+   * @returns {Element} returns the game-container element safely.
+   */
+  const getBoardContainer = () => {
+    const boardContainer = document.querySelector("#game-container");
+    return boardContainer;
+  };
+
+  /**
+   * Responsible for resetting the cells within game-container to reset the UI.
+   * @memberof displayController
+   */
+  const resetDisplay = () => {
+    const boardCells = document.querySelectorAll(".game-cell");
+    boardCells.forEach((node, index) => {
+      node.textContent = "";
+      node.classList.remove("x-marker", "o-marker");
+
+      // Switch focus to the first cell once the board has been reset.
+      boardCells[0].focus();
+    });
+  };
+
+  /**
+   * Responsible for resetting the name and score for each of the player cards.
+   * Resets the values to the default values.
+   */
+  const resetPlayerCards = () => {
+    // first-player-name + first-player-score
+    // second-player-name + second-player-score
+    const firstPlayerNameElement = document.querySelector("#first-player-name");
+    const firstPlayerScoreElement = document.querySelector(
+      "#first-player-score",
+    );
+    const secondPlayerNameElement = document.querySelector(
+      "#second-player-name",
+    );
+    const secondPlayerScoreElement = document.querySelector(
+      "#second-player-score",
+    );
+
+    firstPlayerNameElement.textContent = "Player 1";
+    firstPlayerScoreElement.textContent = "0";
+    secondPlayerNameElement.textContent = "Player 2";
+    secondPlayerScoreElement.textContent = "0";
+  };
+
+  const initialiseFooterYear = () => {
+    const footerYearSpan = document.querySelector(".footer-year");
+    const currentYear = new Date().getFullYear();
+    footerYearSpan.textContent = currentYear;
+  };
+
+  return {
+    updatePlayerCardName,
+    updatePlayerCardScore,
+    createBoard,
+    updateBoard,
+    getBoardContainer,
+    resetDisplay,
+    resetPlayerCards,
+    updateTurnIndicator,
+    initialiseFooterYear,
+  };
+})();
+
+/**
  * Responsible for primary game loop logic and managing the gameBoard and player objects.
  */
-const gameController = () => {
+const gameController = (() => {
   /**
    * Handles checking for three in each of the rows (horizontally).
    * @param {string} marker - The marker to check for matching three in a row.
@@ -308,7 +447,6 @@ const gameController = () => {
    * Handle updating the current players name and closing the modal when the new name is entered.
    */
   playerConfigForm.addEventListener("submit", (event) => {
-
     event.preventDefault();
     const newPlayerNameInputElement = event.target.elements["new-player-name"];
     const newPlayerName = newPlayerNameInputElement.value.trim();
@@ -340,16 +478,18 @@ const gameController = () => {
 
   /**
    * Handles closing the player-config-modal when the Cancel button is clicked.
-  */
- const playerConfigCancelButton = document.querySelector("#player-config-cancel");
- if (playerConfigCancelButton) {
-   playerConfigCancelButton.addEventListener("click", (event) => {
-     event.preventDefault();
-     playerConfigModal.close();
-     playerConfigForm.reset();
+   */
+  const playerConfigCancelButton = document.querySelector(
+    "#player-config-cancel",
+  );
+  if (playerConfigCancelButton) {
+    playerConfigCancelButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      playerConfigModal.close();
+      playerConfigForm.reset();
     });
   }
-  
+
   /**
    * Add event listener to each of the name update buttons.
    */
@@ -474,145 +614,4 @@ const gameController = () => {
       }
     });
   });
-};
-
-/**
- * Responsible for updating the UI with the current state of the game board.
- * @namespace displayController
- */
-const displayController = (() => {
-  /**
-   * Handles updating the UI for the player name.
-   * @param {string} playerCardNameId - Represents the ID for the current player name element.
-   * @param {string} newName - The current players new name.
-   */
-  const updatePlayerCardName = (playerCardNameId, newName) => {
-    const selectedPlayerName = document.querySelector(`#${playerCardNameId}`);
-    selectedPlayerName.textContent = newName;
-  };
-
-  /**
-   * Updates the score for the player card.
-   * @param {string} playerCardScoreId - Represents the ID for the current player score element.
-   * @param {Number} score - The new score for the player.
-   */
-  const updatePlayerCardScore = (playerCardScoreId, score) => {
-    const selectedPlayerScore = document.querySelector(`#${playerCardScoreId}`);
-    selectedPlayerScore.textContent = score;
-  };
-
-  /**
-   * Handles updating the turn indicator with the current players name.
-   * @param {string} name - The name of the current player, to indicate their turn.
-   */
-  const updateTurnIndicator = (name) => {
-    const turnIndicatorElement = document.querySelector("#turn-indicator");
-    turnIndicatorElement.textContent = `${name}'s Turn`;
-  };
-
-  /**
-   * Responsible for populate the game container with cells to create the UI.
-   * @param {number} numOfRows - Represents the number of rows for the board to be created.
-   * @param {number} numOfCols - Represents the number of columns for each row.
-   * @memberof displayController
-   */
-  const createBoard = (numOfRows, numOfCols) => {
-    const boardContainer = document.querySelector("#game-container");
-
-    for (let row = 0; row < numOfRows; row++) {
-      for (let col = 0; col < numOfCols; col++) {
-        const cell = document.createElement("button");
-        cell.classList.add("game-cell");
-        cell.dataset.row = row;
-        cell.dataset.col = col;
-        cell.textContent = "";
-        boardContainer.appendChild(cell);
-      }
-    }
-  };
-
-  /**
-   * Handles updating the UI board with players marker depending on the clicked cell.
-   * @param {number} row - The selected row for the selected cell.
-   * @param {number} col - The selected column for the selected cell.
-   * @param {string} marker - The marker to be placed within the board on the UI.
-   * @memberof displayController
-   */
-  const updateBoard = (row, col, marker) => {
-    const dynamicMarkerClass = `${marker.toLocaleLowerCase()}-marker`;
-    const selectedCell = document.querySelector(
-      `[data-row="${row}"][data-col="${col}"]`,
-    );
-    selectedCell.textContent = marker;
-    selectedCell.classList.add(dynamicMarkerClass);
-  };
-
-  /**
-   * Responsible for protecting and returning the game-container element safely.
-   * @memberof displayController
-   * @returns {Element} returns the game-container element safely.
-   */
-  const getBoardContainer = () => {
-    const boardContainer = document.querySelector("#game-container");
-    return boardContainer;
-  };
-
-  /**
-   * Responsible for resetting the cells within game-container to reset the UI.
-   * @memberof displayController
-   */
-  const resetDisplay = () => {
-    const boardCells = document.querySelectorAll(".game-cell");
-    boardCells.forEach((node, index) => {
-      node.textContent = "";
-      node.classList.remove("x-marker", "o-marker");
-
-      // Switch focus to the first cell once the board has been reset.
-      boardCells[0].focus();
-    });
-  };
-
-  /**
-   * Responsible for resetting the name and score for each of the player cards.
-   * Resets the values to the default values.
-   */
-  const resetPlayerCards = () => {
-    // first-player-name + first-player-score
-    // second-player-name + second-player-score
-    const firstPlayerNameElement = document.querySelector("#first-player-name");
-    const firstPlayerScoreElement = document.querySelector(
-      "#first-player-score",
-    );
-    const secondPlayerNameElement = document.querySelector(
-      "#second-player-name",
-    );
-    const secondPlayerScoreElement = document.querySelector(
-      "#second-player-score",
-    );
-
-    firstPlayerNameElement.textContent = "Player 1";
-    firstPlayerScoreElement.textContent = "0";
-    secondPlayerNameElement.textContent = "Player 2";
-    secondPlayerScoreElement.textContent = "0";
-  };
-
-  const initialiseFooterYear = () => {
-    const footerYearSpan = document.querySelector(".footer-year");
-    const currentYear = new Date().getFullYear();
-    footerYearSpan.textContent = currentYear;
-  };
-
-  return {
-    updatePlayerCardName,
-    updatePlayerCardScore,
-    createBoard,
-    updateBoard,
-    getBoardContainer,
-    resetDisplay,
-    resetPlayerCards,
-    updateTurnIndicator,
-    initialiseFooterYear,
-  };
 })();
-
-gameController();
