@@ -615,3 +615,8 @@ const gameController = (() => {
     });
   });
 })();
+
+// TODO:
+// - Investigate possible reuse of modal closing functions within displayController.
+// - Investigate best way to handle opening the modal and closing it.
+// - Rework modal closing logic when modal backdrop is clicked.
