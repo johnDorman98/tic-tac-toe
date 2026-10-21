@@ -433,6 +433,9 @@ const gameController = (() => {
   let isGameOver = false;
 
   // Select DOM elements for UI interaction.
+  const helpModalOpenButton = document.querySelector("#help-button");
+  const helpModal = document.querySelector("#help-modal");
+  const helpModalClose = document.querySelector("#help-modal-close");
   const resetButtonElement = document.querySelector('button[type="reset"]');
   const outcomeModal = document.querySelector("#game-outcome-modal");
   const outcomeFeedback = document.querySelector("#game-outcome");
@@ -442,6 +445,20 @@ const gameController = (() => {
   const updateNameButtons = document.querySelectorAll(".update-name-button");
   const nextRoundButtonElement = document.querySelector("#next-round-button");
   const dialogElements = document.querySelectorAll("dialog");
+
+  /**
+   * Handle opening help modal
+   */
+  helpModalOpenButton.addEventListener("click", () => {
+    helpModal.showModal();
+  });
+
+  /**
+   * Handle closing the help modal, when close button is pressed
+   */
+  helpModalClose.addEventListener("click", () => {
+    helpModal.close();
+  })
 
   /**
    * Handle updating the current players name and closing the modal when the new name is entered.
@@ -593,30 +610,8 @@ const gameController = (() => {
   dialogElements.forEach((element) => {
     element.addEventListener("click", (event) => {
       if (event.target === element) {
-        // Get valid boundary for modal.
-        const validBoundary = element.getBoundingClientRect();
-
-        // Calculate if click landed outside of boundary.
-        const isTooFarLeft = event.clientX < validBoundary.left;
-        const isTooFarRight = event.clientX > validBoundary.right;
-        const isTooFarAbove = event.clientY < validBoundary.top;
-        const isTooFarBelow = event.clientY > validBoundary.bottom;
-
-        // Ensure that the click falls outside the valid boundary for the dialog box.
-        if (isTooFarLeft || isTooFarRight || isTooFarAbove || isTooFarBelow) {
-          element.close();
-
-          if (element.id === "player-config-modal") {
-            const nestedForm = element.querySelector("form");
-            nestedForm.reset();
-          }
-        }
+        element.close();
       }
     });
   });
 })();
-
-// TODO:
-// - Investigate possible reuse of modal closing functions within displayController.
-// - Investigate best way to handle opening the modal and closing it.
-// - Rework modal closing logic when modal backdrop is clicked.
