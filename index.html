@@ -10,6 +10,8 @@
   <body>
     <header class="navbar">
       <h1 class="navbar-title">Tic Tac Toe</h1>
+      <button id="help-button" class="navbar-button">Help</button>
+
       <!-- Possible location for help modal button -->
       <!-- Place modal itself outside of the header, towards the bottom of the body. -->
       <!-- Create dialog box with a closedby of any, to avoid manual JS to close modal when backdrop is clicked -->
@@ -18,6 +20,43 @@
       <!-- Investigate correct place for other dialog elements to be moved and for the new dialog element. -->
     </header>
     <main class="main-container">
+      <div class="score-board">
+        <div class="player-x player-card">
+          <p id="first-player-name" class="player-name">Player 1</p>
+          <p id="first-player-score" class="player-score">0</p>
+          <button class="update-name-button" data-player="player1">
+            Update Name
+          </button>
+        </div>
+        <div class="player-o player-card">
+          <p id="second-player-name" class="player-name">Player 2</p>
+          <p id="second-player-score" class="player-score">0</p>
+          <button class="update-name-button" data-player="player2">
+            Update Name
+          </button>
+        </div>
+      </div>
+      <div id="turn-indicator" class="turn-indicator"></div>
+      <div id="game-container" class="game-container"></div>
+      <div class="game-control-buttons">
+        <button
+          id="next-round-button"
+          type="button"
+          class="next-round-button hidden"
+        >
+          Play Again
+        </button>
+        <button type="reset" class="restart-button">Restart</button>
+      </div>
+
+      <!-- Dialog modal elements grouped together -->
+      <dialog id="help-modal">
+        <div class="help-container">
+          <h2>How to Play</h2>
+          <p>Instructions to be added</p>
+          <button id="help-modal-close" autofocus>Close</button>
+        </div>
+      </dialog>
       <dialog id="game-outcome-modal">
         <div class="game-outcome-container">
           <p id="game-outcome"></p>
@@ -49,34 +88,6 @@
           </button>
         </form>
       </dialog>
-      <div class="score-board">
-        <div class="player-x player-card">
-          <p id="first-player-name" class="player-name">Player 1</p>
-          <p id="first-player-score" class="player-score">0</p>
-          <button class="update-name-button" data-player="player1">
-            Update Name
-          </button>
-        </div>
-        <div class="player-o player-card">
-          <p id="second-player-name" class="player-name">Player 2</p>
-          <p id="second-player-score" class="player-score">0</p>
-          <button class="update-name-button" data-player="player2">
-            Update Name
-          </button>
-        </div>
-      </div>
-      <div id="turn-indicator" class="turn-indicator"></div>
-      <div id="game-container" class="game-container"></div>
-      <div class="game-control-buttons">
-        <button
-          id="next-round-button"
-          type="button"
-          class="next-round-button hidden"
-        >
-          Play Again
-        </button>
-        <button type="reset" class="restart-button">Restart</button>
-      </div>
     </main>
     <footer>
       <p>
