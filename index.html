@@ -46,8 +46,71 @@
       <dialog id="help-modal">
         <div class="help-container">
           <h2>How to Play</h2>
-          <p>Instructions to be added</p>
-          <button id="help-modal-close" class="dialog-button-primary dialog-button" autofocus>Close</button>
+          <p>
+            Welcome to Tic Tac Toe! This classic game is played on a 3x3 grid.
+            Players take turns marking their symbols to get three in a row.
+          </p>
+
+          <h3>Game Objective</h3>
+          <p>
+            Be the first player to get three of your marks (X or O) in a row,
+            column, or diagonal to win the game.
+          </p>
+
+          <h3>How to Play</h3>
+          <ul>
+            <li>Player X starts first, then players alternate turns</li>
+            <li>Click on any empty cell to place your mark</li>
+            <li>Your mark will appear in the selected cell</li>
+            <li>
+              Continue taking turns until someone wins or the board is full
+            </li>
+          </ul>
+
+          <h3>Winning Conditions</h3>
+          <p>
+            You win by getting three of your marks in any of these patterns:
+          </p>
+          <ul>
+            <li>Three in a row horizontally</li>
+            <li>Three in a column vertically</li>
+            <li>Three in a diagonal line</li>
+          </ul>
+
+          <h3>Game Controls</h3>
+          <ul>
+            <li>
+              <strong>Help:</strong> Click the "Help" button in the top-right to
+              reopen this help menu
+            </li>
+            <li>
+              <strong>Update Names:</strong> Click "Update Name" on any player
+              card to change player names
+            </li>
+            <li>
+              <strong>Restart:</strong> Click "Restart" to reset the game and
+              scores
+            </li>
+            <li>
+              <strong>Play Again:</strong> Click "Play Again" after a game ends
+              to start a new round
+            </li>
+          </ul>
+
+          <h3>Game End</h3>
+          <p>The game ends when:</p>
+          <ul>
+            <li>A player gets three marks in a row (that player wins)</li>
+            <li>All cells are filled with no winner (it's a draw)</li>
+          </ul>
+
+          <button
+            id="help-modal-close"
+            class="dialog-button-primary dialog-button"
+            autofocus
+          >
+            Close
+          </button>
         </div>
       </dialog>
       <dialog id="game-outcome-modal">
