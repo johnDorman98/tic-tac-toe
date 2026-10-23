@@ -10,8 +10,109 @@
   <body>
     <header class="navbar">
       <h1 class="navbar-title">Tic Tac Toe</h1>
+      <button id="help-button" class="help-button">Help</button>
     </header>
     <main class="main-container">
+      <div class="score-board">
+        <div class="player-x player-card">
+          <p id="first-player-name" class="player-name">Player 1</p>
+          <p id="first-player-score" class="player-score">0</p>
+          <button class="update-name-button" data-player="player1">
+            Update Name
+          </button>
+        </div>
+        <div class="player-o player-card">
+          <p id="second-player-name" class="player-name">Player 2</p>
+          <p id="second-player-score" class="player-score">0</p>
+          <button class="update-name-button" data-player="player2">
+            Update Name
+          </button>
+        </div>
+      </div>
+      <div id="turn-indicator" class="turn-indicator"></div>
+      <div id="game-container" class="game-container"></div>
+      <div class="game-control-buttons">
+        <button
+          id="next-round-button"
+          type="button"
+          class="next-round-button hidden"
+        >
+          Play Again
+        </button>
+        <button type="reset" class="restart-button">Restart</button>
+      </div>
+
+      <!-- Dialog modal elements grouped together -->
+      <dialog id="help-modal">
+        <div class="help-container">
+          <h2>How to Play</h2>
+          <p>
+            Welcome to Tic Tac Toe! This classic game is played on a 3x3 grid.
+            Players take turns marking their symbols to get three in a row.
+          </p>
+
+          <h3>Game Objective</h3>
+          <p>
+            Be the first player to get three of your marks (X or O) in a row,
+            column, or diagonal to win the game.
+          </p>
+
+          <h3>How to Play</h3>
+          <ul>
+            <li>Player X starts first, then players alternate turns</li>
+            <li>Click on any empty cell to place your mark</li>
+            <li>Your mark will appear in the selected cell</li>
+            <li>
+              Continue taking turns until someone wins or the board is full
+            </li>
+          </ul>
+
+          <h3>Winning Conditions</h3>
+          <p>
+            You win by getting three of your marks in any of these patterns:
+          </p>
+          <ul>
+            <li>Three in a row horizontally</li>
+            <li>Three in a column vertically</li>
+            <li>Three in a diagonal line</li>
+          </ul>
+
+          <h3>Game Controls</h3>
+          <ul>
+            <li>
+              <strong>Help:</strong> Click the "Help" button in the top-right to
+              reopen this help menu
+            </li>
+            <li>
+              <strong>Update Names:</strong> Click "Update Name" on any player
+              card to change player names
+            </li>
+            <li>
+              <strong>Restart:</strong> Click "Restart" to reset the game and
+              scores
+            </li>
+            <li>
+              <strong>Play Again:</strong> Click "Play Again" after a game ends
+              to start a new round
+            </li>
+          </ul>
+
+          <h3>Game End</h3>
+          <p>The game ends when:</p>
+          <ul>
+            <li>A player gets three marks in a row (that player wins)</li>
+            <li>All cells are filled with no winner (it's a draw)</li>
+          </ul>
+
+          <button
+            id="help-modal-close"
+            class="dialog-button-primary dialog-button"
+            autofocus
+          >
+            Close
+          </button>
+        </div>
+      </dialog>
       <dialog id="game-outcome-modal">
         <div class="game-outcome-container">
           <p id="game-outcome"></p>
@@ -43,38 +144,10 @@
           </button>
         </form>
       </dialog>
-      <div class="score-board">
-        <div class="player-x player-card">
-          <p id="first-player-name" class="player-name">Player 1</p>
-          <p id="first-player-score" class="player-score">0</p>
-          <button class="update-name-button" data-player="player1">
-            Update Name
-          </button>
-        </div>
-        <div class="player-o player-card">
-          <p id="second-player-name" class="player-name">Player 2</p>
-          <p id="second-player-score" class="player-score">0</p>
-          <button class="update-name-button" data-player="player2">
-            Update Name
-          </button>
-        </div>
-      </div>
-      <div id="turn-indicator" class="turn-indicator"></div>
-      <div id="game-container" class="game-container"></div>
-      <div class="game-control-buttons">
-        <button
-          id="next-round-button"
-          type="button"
-          class="next-round-button hidden"
-        >
-          Play Again
-        </button>
-        <button type="reset" class="restart-button">Restart</button>
-      </div>
     </main>
     <footer>
       <p>
-        &copy;<span class="footer-year">2025</span> Made by John for The Odin
+        &copy;<span class="footer-year">2026</span> Made by John for The Odin
         Project
       </p>
     </footer>
